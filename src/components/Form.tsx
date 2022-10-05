@@ -28,26 +28,43 @@ const Form: React.FC = () => {
       console.log(JSON.stringify(data));
    };
 
-   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+   const handleChange = (
+      e: React.ChangeEvent<HTMLInputElement>
+   ) => {
       const type = e.target.type;
       const name = e.target.name;
 
-      const value = type === 'checkbox' ? e.target.checked : e.target.value;
+      // const value = type === 'checkbox' ? e.target.checked : e.target.value;
+      const value = e.target.value;
 
-      setData(prevData => {
-         return { ...prevData, [name]: value };
+      setData((prevData) => ({ ...prevData, [name]: value }));
+   }
+
+   const handleChangeSelect = (
+      e: React.ChangeEvent<HTMLSelectElement>
+   ) => {
+      setData(prev => {
+         return {...prev, [e.target.name]: e.target.value}
       })
    };
 
+   const { billAddress2, ...otherProps } = data;
+   console.log(Object.values(otherProps));
+   const canSave = [...Object.values(otherProps)].every(Boolean)
+
   return (
-    <form className='fom flex-col' onSubmit={handleSubmit} >
-      <h2>Billing Info</h2>
+     <form className="form flex-col" onSubmit={handleSubmit}>
+        <h2>Billing Info</h2>
 
-      <Billing data={data} handleChange={handleChange} />
+        <Billing
+           data={data}
+           handleChange={handleChange}
+           handleChangeSelect={handleChangeSelect}
+        />
 
-      <button className="button">Submit</button>
-    </form>
-  )
+        <button className="button" disabled={!canSave} >Submit</button>
+     </form>
+  );
 }
 
 export default Form

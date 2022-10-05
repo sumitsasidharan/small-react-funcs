@@ -3,9 +3,14 @@ import { DataState } from "./Form";
 type BillingProps = {
    data: DataState;
    handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+   handleChangeSelect: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 };
 
-const Billing: React.FC<BillingProps> = ({ data, handleChange }) => {
+const Billing: React.FC<BillingProps> = ({
+   data,
+   handleChange,
+   handleChangeSelect,
+}) => {
    const content = (
       <div className="flex-col">
          <div className="split-container">
@@ -43,8 +48,7 @@ const Billing: React.FC<BillingProps> = ({ data, handleChange }) => {
             placeholder="555 Wallaby Way"
             pattern="[\w\d\s.#]{2,}"
             value={data.billAddress1}
-            // onChange={handleChange}
-            onChange={(e) => console.log(e.target.value)}
+            onChange={handleChange}
          />
 
          <label htmlFor="billAddress2" className="offscreen">
@@ -76,7 +80,9 @@ const Billing: React.FC<BillingProps> = ({ data, handleChange }) => {
             id="billState"
             name="billState"
             value={data.billState}
-            onChange={handleChange}>
+            // onChange={handleChange}
+            onChange={handleChangeSelect}
+            >
             <option value="AL">Alabama</option>
             <option value="AK">Alaska</option>
             <option value="AZ">Arizona</option>
