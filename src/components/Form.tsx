@@ -1,5 +1,7 @@
-import React, { useState } from 'react'
+import useFormContext from '../hooks/useFormContext';
 import Billing from './Billing';
+import FormInputs from './FormInputs';
+import { FormContextObj } from '../context/FormContext';
 
 export type DataState = {
    billFirstName: string;
@@ -12,15 +14,7 @@ export type DataState = {
 };
 
 const Form: React.FC = () => {
-   const [data, setData] = useState<DataState>({
-      billFirstName: '',
-      billLastName: '',
-      billAddress1: '',
-      billAddress2: '',
-      billCity: '',
-      billState: '',
-      billZipCode: '',
-   });
+   const  { page, setPage, data, title, canSubmit } = useFormContext();
 
    const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
       e.preventDefault();
@@ -28,41 +22,38 @@ const Form: React.FC = () => {
       console.log(JSON.stringify(data));
    };
 
-   const handleChange = (
-      e: React.ChangeEvent<HTMLInputElement>
-   ) => {
-      const type = e.target.type;
-      const name = e.target.name;
-
-      // const value = type === 'checkbox' ? e.target.checked : e.target.value;
-      const value = e.target.value;
-
-      setData((prevData) => ({ ...prevData, [name]: value }));
-   }
-
-   const handleChangeSelect = (
-      e: React.ChangeEvent<HTMLSelectElement>
-   ) => {
-      setData(prev => {
-         return {...prev, [e.target.name]: e.target.value}
-      })
-   };
-
-   const { billAddress2, ...otherProps } = data;
-   console.log(Object.values(otherProps));
-   const canSave = [...Object.values(otherProps)].every(Boolean)
+   
+   // const handleChangeSelect = (
+   //    e: React.ChangeEvent<HTMLSelectElement>
+   //    ) => {
+   //       setData(prev => {
+   //          return {...prev, [e.target.name]: e.target.value}
+   //       })
+   //    };
+      
+   
 
   return (
      <form className="form flex-col" onSubmit={handleSubmit}>
-        <h2>Billing Info</h2>
+        <header>
+           <h2>{title[page]}</h2>
 
-        <Billing
+           <div className="button-container">
+               <button type="button" className="button">Prev</button>
+               <button type="button" className="button">Next</button>
+              <button type="submit" className="button" disabled={!canSubmit}>
+                 Submit
+              </button>
+           </div>
+        </header>
+
+        <FormInputs />
+
+        {/* <Billing
            data={data}
            handleChange={handleChange}
            handleChangeSelect={handleChangeSelect}
-        />
-
-        <button className="button" disabled={!canSave} >Submit</button>
+        /> */}
      </form>
   );
 }
